@@ -1,0 +1,14 @@
+{
+  "name": "discord-speech-to-text",
+  "version": "1.0.0",
+  "description": "Transcribes the speech in a voice channel to text.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Adrian Gonzalez",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
