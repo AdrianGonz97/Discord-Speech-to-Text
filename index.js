@@ -39,7 +39,7 @@ async function transcribe(message) {
   //console.log(voiceChannel);
 
   if (voiceChannel) {
-    console.log(`[UPDATE] Joining voice channel: ${voiceChannel.id}`);
+    console.log(`[UPDATE] Joining voice channel ${voiceChannel.id} on guild ${voiceChannel.guild.id}`);
     console.log(voiceChannel.members);
 
     const permissions = voiceChannel.permissionsFor(message.client.user);
@@ -54,11 +54,24 @@ async function transcribe(message) {
 
   try { // joins the channel
     let connection = await voiceChannel.join();
+
     connection.on('disconnect', () => {
       message.channel.send("Disconnected voice channel as there are no users present.");
+      console.log(`[UPDATE] Bot disconnected from channel ${connection.channel.id} on guild ${connection.channel.guild.id}`);
     });
+
     connection.on('speaking', (user, speaking) => {
       // emitted whenever a user changes speaking state
+      //let receiver = connection.receiver;
+      //console.log(user);
+      //console.log(speaking);
+
+      if (speaking.bitfield === 1) {
+        console.log(`[UPDATE] User ${user.id} is speaking!`);
+      }
+      else {
+        console.log(`[UPDATE] User ${user.id} has stopped speaking!`);
+      }
     });
   }
   catch (err){
