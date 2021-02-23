@@ -10,6 +10,7 @@
   "author": "Adrian Gonzalez",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/opus": "^0.4.0",
     "@google-cloud/speech": "^4.2.0",
     "custom-env": "^2.0.1",
     "discord.js": "^12.5.1"

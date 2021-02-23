@@ -1,6 +1,8 @@
 require('custom-env').env('staging');
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const fs = require('fs');
+const { connect } = require('http2');
 
 const prefix =  "!";
 
@@ -65,12 +67,18 @@ async function transcribe(message) {
 
     connection.on('speaking', (user, speaking) => { // emitted whenever a user changes speaking state
       if (speaking.bitfield === 1) {
-        console.log(`[UPDATE]: User ${user.id} is speaking!`);
+        console.log(`[UPDATE]: User ${user.id} is speaking!`);        
         // start recording stream
+        //audio.createStream(user, { mode: 'pcm' });
+        //audio.pipe(fs.createWriteStream('user_audio'));
+        const audio = connection.receiver.createStream(user, { mode: 'pcm', end: 'silence' });
+        d = new Date().getTime();
+        audio.pipe(fs.createWriteStream(`${user.id}_${d}`));
       }
       else if (speaking.bitfield === 0) {
         console.log(`[UPDATE]: User ${user.id} has stopped speaking!`);
         // stop recording stream
+        connection.disconnect();
       }
     });
   }
