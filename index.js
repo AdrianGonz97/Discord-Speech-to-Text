@@ -1,17 +1,29 @@
 require('custom-env').env('staging');
+const speech = require('@google-cloud/speech');
 const Discord = require('discord.js');
-const client = new Discord.Client();
 const fs = require('fs');
-const { connect } = require('http2');
+const ts = require('./transcriber');
 
+const sclient = new speech.SpeechClient();
+const client = new Discord.Client();
 const prefix =  "!";
+
+//const filename = '133737373677780993_1614116531717';
+const encoding = 'LINEAR16';
+const sampleRateHertz = 48000;
+const languageCode = process.env.LANGUAGE_CODE;//'en-US';
+const audioFolder = '../audio_files'
+const saveFiles = (process.env.AUDIO_LOGGING == 'true');
+console.log(saveFiles);
+
+makeDir(audioFolder);
 
 client.on('ready', () => {
   console.log(`[START]: Logged in as ${client.user.tag}!`);
 });
 
 client.once("disconnect", () => {
-  console.log("[EXIT] Disconnecting");
+  console.log("[EXIT]: Disconnecting");
 });
 
 client.on('message', async message => {
@@ -25,7 +37,7 @@ client.on('message', async message => {
 
   if (command == "s2texit") {  // TEMP TO TEST BABY
     message.channel.send(`\n\nShutting down Speech-to-Text Bot.`);
-    console.log(`[UPDATE]: Shutting down ${client.user.tag}..`);
+    console.log(`[EXIT]: Shutting down ${client.user.tag}..`);
     process.exit(0);
   }
 
@@ -36,6 +48,8 @@ client.on('message', async message => {
 
 async function transcribe(message) {
   const voiceChannel = message.member.voice.channel;
+  //const transcriber = new ts();
+
   //const user = message.author;
   //console.log(user.id);
   //console.log(voiceChannel);
@@ -57,34 +71,83 @@ async function transcribe(message) {
   try { // joins the channel
     let connection = await voiceChannel.join();
     connection.setSpeaking(0);
-    //connection.setSpeaking(0);
-    //let receiver = connection.receiver;
+    
+    // make dir based on server and channel
+    const guildFolder = `${audioFolder}/Guild_${connection.channel.guild.id}`;
+    const channelFolder = `${guildFolder}/Channel_${connection.channel.id}`;
+    makeDir(guildFolder);
+    makeDir(channelFolder);
 
     connection.on('disconnect', () => {
-      message.channel.send("Disconnected voice channel as there are no users present.");
+      message.channel.send("Disconnected voice channel - no users present.");
       console.log(`[UPDATE]: Bot disconnected from channel ${connection.channel.id} on guild ${connection.channel.guild.id}`);
     });
 
     connection.on('speaking', (user, speaking) => { // emitted whenever a user changes speaking state
+      let filename = saveFiles ? `${channelFolder}/${user.id}_${new Date().getTime()}`: `${channelFolder}/${user.id}`; //_${new Date().getTime()}
+
       if (speaking.bitfield === 1) {
-        console.log(`[UPDATE]: User ${user.id} is speaking!`);        
+        const request = {
+          config: {
+            encoding: encoding,
+            sampleRateHertz: sampleRateHertz,
+            languageCode: languageCode,
+            enableAutomaticPunctuation: true,
+            speechContexts: [{
+              phrases: ["Henil", "Shawn", "Arneal"]
+            }],
+          },
+          interimResults: false, // If you want interim results, set this to true
+        };
+      
+        // Stream the audio to the Google Cloud Speech API
+        const recognizeStream = 
+          sclient.streamingRecognize(request)
+          .on('error', console.error)
+          .on('data', data => {
+              let transcript = data.results[0].alternatives[0].transcript;
+              console.log("[UPDATE]: Finished transcribing")
+              console.log(`[TRANSCRIPTION]: ${transcript}`);
+              message.channel.send(`**${user.username}**: ${transcript}`);
+          }
+        );
+
+        console.log(`[UPDATE]: User ${user.id} is speaking!`);   
+        
         // start recording stream
-        //audio.createStream(user, { mode: 'pcm' });
-        //audio.pipe(fs.createWriteStream('user_audio'));
         const audio = connection.receiver.createStream(user, { mode: 'pcm', end: 'silence' });
-        d = new Date().getTime();
-        audio.pipe(fs.createWriteStream(`${user.id}_${d}`));
+        let file = fs.createWriteStream(filename);
+        
+        audio.pipe(file);
+
+        file.on('finish', () => {
+          console.log(`[UPDATE]: Audio file saved: ${filename}`); 
+          let f = fs.createReadStream(filename);
+          f.pipe(recognizeStream);
+          f.on('close', () => { 
+            //console.log("CLOSED readstream");
+          });
+        });
       }
       else if (speaking.bitfield === 0) {
         console.log(`[UPDATE]: User ${user.id} has stopped speaking!`);
-        // stop recording stream
-        connection.disconnect();
       }
     });
   }
   catch (err){
     console.log(`[ERROR]: ${err}`);
     return message.channel.send(err);
+  }
+}
+
+function makeDir(folderName) {
+  try {
+    if (!fs.existsSync(folderName)) {
+      fs.mkdirSync(folderName)
+      console.log(`[UPDATE]: Folder created: ${folderName}`);
+    }
+  } catch (err) {
+    console.error(err)
   }
 }
 
