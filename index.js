@@ -2,6 +2,7 @@ require('custom-env').env('staging');
 const speech = require('@google-cloud/speech');
 const Discord = require('discord.js');
 const fs = require('fs');
+const { disconnect } = require('process');
 const ts = require('./transcriber');
 
 const sclient = new speech.SpeechClient();
@@ -14,7 +15,9 @@ const sampleRateHertz = 48000;
 const languageCode = process.env.LANGUAGE_CODE;//'en-US';
 const audioFolder = '../audio_files'
 const saveFiles = (process.env.AUDIO_LOGGING == 'true');
-console.log(saveFiles);
+
+console.log(`[SETTINGS]: Audio Logging: ${saveFiles}`);
+console.log(`[SETTINGS]: Language Code: ${process.env.LANGUAGE_CODE}`);
 
 makeDir(audioFolder);
 
@@ -44,18 +47,29 @@ client.on('message', async message => {
   if (command == "transcribe") {
     transcribe(message);
   }
+
+  if (command == "disconnect") {
+    disconnectBot(message);
+  }
 });
 
 async function transcribe(message) {
   const voiceChannel = message.member.voice.channel;
-  //const transcriber = new ts();
-
-  //const user = message.author;
-  //console.log(user.id);
-  //console.log(voiceChannel);
 
   if (voiceChannel) {
+    let isAlreadyInChannel = false;
+    client.voice.connections.each((connection) => {
+      if (connection.channel.id == voiceChannel.id) {
+        isAlreadyInChannel = true;
+      }
+    });
+    
+    if(isAlreadyInChannel) {
+      return message.channel.send("Already transcribing in this channel!");
+    }
+
     console.log(`[UPDATE]: Joining voice channel ${voiceChannel.id} on guild ${voiceChannel.guild.id}`);
+    message.channel.send("Beginning transcription.\nTo disconnect bot, say \"disconnect\", or type command:\n\`\`\`!disconnect\`\`\`");
     //console.log(voiceChannel.members);
 
     const permissions = voiceChannel.permissionsFor(message.client.user);
@@ -79,12 +93,16 @@ async function transcribe(message) {
     makeDir(channelFolder);
 
     connection.on('disconnect', () => {
-      message.channel.send("Disconnected voice channel - no users present.");
+      message.channel.send("Disconnected from voice channel.");
       console.log(`[UPDATE]: Bot disconnected from channel ${connection.channel.id} on guild ${connection.channel.guild.id}`);
     });
 
     connection.on('speaking', (user, speaking) => { // emitted whenever a user changes speaking state
       let filename = saveFiles ? `${channelFolder}/${user.id}_${new Date().getTime()}`: `${channelFolder}/${user.id}`; //_${new Date().getTime()}
+      let nickname = message.guild.member(user).nickname;
+      if (!nickname) { // user speaking will be called by their nickname if present
+        nickname = user.username;
+      }
 
       if (speaking.bitfield === 1) {
         const request = {
@@ -108,7 +126,10 @@ async function transcribe(message) {
               let transcript = data.results[0].alternatives[0].transcript;
               console.log("[UPDATE]: Finished transcribing")
               console.log(`[TRANSCRIPTION]: ${transcript}`);
-              message.channel.send(`**${user.username}**: ${transcript}`);
+              message.channel.send(`**${nickname}**: ${transcript}`);
+
+              if(transcript.toLowerCase() == "disconnect")
+                connection.disconnect();
           }
         );
 
@@ -137,6 +158,19 @@ async function transcribe(message) {
   catch (err){
     console.log(`[ERROR]: ${err}`);
     return message.channel.send(err);
+  }
+}
+
+async function disconnectBot(message) {
+  const voiceChannel = message.member.voice.channel;
+
+  if (voiceChannel) {
+    let isAlreadyInChannel = false;
+    client.voice.connections.each((connection) => {
+      if (connection.channel.id == voiceChannel.id) {
+        isAlreadyInChannel = true;
+      }
+    });
   }
 }
 
