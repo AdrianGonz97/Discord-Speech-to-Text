@@ -1,6 +1,6 @@
 require('custom-env').env();
 const commandHandler = require('./commands');
-const Discord = require('discord.js');
+const Discord = require('@cokakoala/discord.js');
 const makeDir = require('./helpers/make-dir');
 const path = require('path');
 
