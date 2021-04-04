@@ -17,25 +17,27 @@ module.exports = async function (message) {
 
     if (voiceChannel) {
         let isAlreadyInChannel = false;
-        client.voice.connections.each((connection) => {
+
+        // check if bot is already connected to the VC
+        client.voice.connections.each((connection) => { 
             if (connection.channel.id == voiceChannel.id) {
                 isAlreadyInChannel = true;
             }
         });
 
-        if (isAlreadyInChannel) {
+        if (isAlreadyInChannel) { // if so, cancel request
             console.log("[UPDATE]: Bot is already transcribing in channel");
             return message.channel.send("Already transcribing in this channel!");
         }
 
-        console.log(`[UPDATE]: Joining voice channel ${voiceChannel.id} on guild ${voiceChannel.guild.id}`);
-        message.channel.send("Beginning transcription.\nTo disconnect bot, say \"disconnect\", or type command:\n\`\`\`!disconnect\`\`\`");
-
         const permissions = voiceChannel.permissionsFor(message.client.user);
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
+        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) { // check for perms
             console.log("[UPDATE]: Does not have permissions to join and speak in voice channel");
             return message.channel.send("I need the permissions to join and speak in your voice channel!");
         }
+
+        console.log(`[UPDATE]: Joining voice channel ${voiceChannel.id} on guild ${voiceChannel.guild.id}`);
+        message.channel.send("Beginning transcription.\nTo disconnect bot, say \"disconnect\", or type command:\n\`\`\`!disconnect\`\`\`");
     }
     else {
         console.log("[UPDATE]: User is not in a voice channel")
@@ -59,7 +61,7 @@ module.exports = async function (message) {
         });
 
         connection.on('speaking', (user, speaking) => { // emitted whenever a user changes speaking state
-            let filename = saveFiles ? `${channelFolder}/${user.id}_${new Date().getTime()}` : `${channelFolder}/${user.id}`; //_${new Date().getTime()}
+            let filename = saveFiles ? `${channelFolder}/${user.id}_${new Date().getTime()}` : `${channelFolder}/${user.id}`;
             let nickname = message.guild.member(user).nickname;
             if (!nickname) { // user speaking will be called by their nickname if present
                 nickname = user.username;
@@ -88,7 +90,8 @@ module.exports = async function (message) {
                             console.log("[UPDATE]: Finished transcribing")
                             console.log(`[TRANSCRIPTION]: ${transcript}`);
                             message.channel.send(`**${nickname}**: ${transcript}`);
-                        });
+                });
+
                 console.log(`[UPDATE]: User ${user.id} is speaking!`);
 
                 // start recording stream
