@@ -12,6 +12,9 @@ Here are the [features](https://cloud.google.com/speech-to-text#section-11) that
 - Automatic punctuation
 
 ## Usage
+### Inviting the Bot:
+To invite this bot to your server, use the invitation link [here](https://discord.com/api/oauth2/authorize?client_id=813489147092271196&permissions=791931984&scope=bot).
+
 ### Summoning the Bot:
 To begin transcription, join a voice channel and type the following command into 
 the text channel you want to have the transcription output to:
@@ -26,5 +29,5 @@ When the session is completed, type the following command to dismiss the bot:
 
     !disconnect
 
-## Installation
+## Installation For Self-Hosting
 TBD
