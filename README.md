@@ -1,5 +1,6 @@
 # Discord-Speech-to-Text
-## **STILL UNDER CONSTRUCTION**
+## **UNDER CONSTRUCTION**
+**WARNING: NOT COMPATIBLE WITH THE BROWSER VERSION OF DISCORD!**
 ## About
 Discord-Speech-to-Text is a simple to use Discord Bot that joins a user's voice channel 
 and transcribes speech to text, outputting the transcribed text into the text channel 
@@ -34,3 +35,5 @@ When the session is completed, type the following command to dismiss the bot:
 
 ## Installation For Self-Hosting
 TBD
+### Requirements
+- TBD

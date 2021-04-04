@@ -4,7 +4,8 @@
   "description": "Transcribes the speech in a voice channel to text.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "node index.js",
+    "start": "node index.js > app.log 2>&1"
   },
   "author": "Adrian Gonzalez",
   "license": "ISC",
