@@ -1,5 +1,5 @@
 # Discord-Speech-to-Text
-## **STILL UNDER CONSTRUCTION **
+## **STILL UNDER CONSTRUCTION**
 ## About
 Discord-Speech-to-Text is a simple to use Discord Bot that joins a user's voice channel 
 and transcribes speech to text, outputting the transcribed text into the text channel 
