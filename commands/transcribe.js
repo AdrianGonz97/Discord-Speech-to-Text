@@ -14,7 +14,7 @@ module.exports = async function (message) {
     const encoding = 'LINEAR16';
     const sampleRateHertz = 48000;
     const languageCode = process.env.LANGUAGE_CODE;
-    const profanityFilter = process.env.PROFANITY_FILTER;
+    const profanityFilter = (process.env.PROFANITY_FILTER == 'true');
     const saveFiles = (process.env.AUDIO_LOGGING == 'true');
     
     if (voiceChannel) {
