@@ -33,13 +33,13 @@ When the session is completed, type the following command to dismiss the bot:
 
     !disconnect
 
-The user who summoned the bot can also say the command `disconnect` to the bot
+The user who summoned the bot can also vocally say the command `disconnect` to the bot
 to dismiss it as well.
 ## Installation For Self-Hosting
 ### Requirements:
 - [Node.js](https://nodejs.org/)
 - [Google Cloud Account](https://cloud.google.com/) - a free 90 day trial with a $300 credit can be used
-- [Discord Bot Application](https://discord.com/developers/applications) - assuming you know how to create an application, bot, and adding it to your server
+- [Discord Bot Application](https://discord.com/developers/applications) - written with the assumption you know how to create a discord application, bot, and adding it to your server
 
 ### Guide:
 - Clone this repository.
@@ -54,5 +54,4 @@ to dismiss it as well.
 - To run, enter `npm start` in a terminal from the project's directory. An `app.log` will be created in the project directory for logging purposes.
 
 ## Additional Notes
-Due to the billing methods that Google's API implements, charges can quickly rack up. Take advantage of the free credit that Google provides
-to get a good idea of your consumption.
+Due to the billing methods that Google's API implements, charges can quickly rack up. Take advantage of the free credit that Google provides to get a good idea of your consumption.
