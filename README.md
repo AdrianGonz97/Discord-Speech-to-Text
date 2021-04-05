@@ -39,7 +39,7 @@ to dismiss it as well.
 ### Requirements:
 - [Node.js](https://nodejs.org/)
 - [Google Cloud Account](https://cloud.google.com/) - a free 90 day trial with a $300 credit can be used
-- [Discord Bot Application](https://discord.com/developers/applications)
+- [Discord Bot Application](https://discord.com/developers/applications) - assuming you know how to create an application, bot, and adding it to your server
 
 ### Guide:
 - Clone this repository.
@@ -50,8 +50,8 @@ to dismiss it as well.
 - From the Google Platform Dashboard, go to APIs & Services > Dashboard, click **'+ ENABLE APIS AND SERVICES'**, type **'Speech-to-text'** in the search bar, and press **Enable**.
 - Copy the path location for the credentials file and paste to it's respective location in the `dotenv-example` file.
 - Rename the `dotenv-example` file to `.env` and modify file's content to your liking.
-- Create a [Discord Bot Application](https://discord.com/developers/applications), create a bot, paste the token into the `.env` file, and invite it to your sever with admin permissions.
-- To run, enter `npm start` in a terminal from the project's directory. An `app.log` will be created in the file for logging.
+- Create a [Discord Bot Application](https://discord.com/developers/applications), then create a bot, paste the bot's token into the `.env` file, and invite it to your server with Administrator permissions.
+- To run, enter `npm start` in a terminal from the project's directory. An `app.log` will be created in the project directory for logging purposes.
 
 ## Additional Notes
 Due to the billing methods that Google's API implements, charges can quickly rack up. Take advantage of the free credit that Google provides
