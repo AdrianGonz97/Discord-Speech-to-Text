@@ -15,7 +15,7 @@ Here are the [features](https://cloud.google.com/speech-to-text#section-11) that
 
 ## Usage
 ### Inviting the Bot:
-To invite this bot to your server, use the invitation link [here](https://discord.com/api/oauth2/authorize?client_id=813489147092271196&permissions=791931984&scope=bot).
+**(NOT ACTIVE):** To invite this bot to your server, use the invitation link [here](https://discord.com/api/oauth2/authorize?client_id=813489147092271196&permissions=791931984&scope=bot).
 
 **NOTE: Public use for this bot is not ready. Speech-to-Text-Bot will NOT be running at all times for now.**  
 
