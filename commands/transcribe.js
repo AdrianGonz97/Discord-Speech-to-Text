@@ -62,6 +62,7 @@ module.exports = async function (message) {
             const members = channel.members;
             const inChannel = members.get(userId)
             if (!inChannel) { // leaves if user not present
+                message.channel.send("Summoner is no longer in the voice channel. Disconnecting...");
                 connection.disconnect();
             }
         }, 5000, connection, voiceChannel, summonerId);
@@ -102,7 +103,9 @@ module.exports = async function (message) {
                             let transcript = data.results[0].alternatives[0].transcript;
                             console.log("[UPDATE]: Finished transcribing")
                             console.log(`[TRANSCRIPTION]: ${transcript}`);
-                            message.channel.send(`**${nickname}**: ${transcript}`);
+
+                            const filteredTranscript = transcript.replaceAll('*', '\\*');
+                            message.channel.send(`**${nickname}**: ${filteredTranscript}`);
 
                             if (transcript.toLowerCase() == "disconnect" && user.id == summonerId) {
                                 connection.disconnect();
