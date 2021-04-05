@@ -55,10 +55,20 @@ module.exports = async function (message) {
         const channelFolder = path.join(guildFolder, `Channel_${connection.channel.id}`);
         makeDir(guildFolder);
         makeDir(channelFolder);
+        
+        // Checks if bot summoner is still in channel
+        const checkConnection = setInterval((connection, channel, userId) => { 
+            const members = channel.members;
+            const inChannel = members.get(userId)
+            if (!inChannel) { // leaves if user not present
+                connection.disconnect();
+            }
+        }, 5000, connection, voiceChannel, summonerId);
 
         connection.on('disconnect', () => {
             message.channel.send("Disconnected from voice channel.");
             console.log(`[UPDATE]: Bot disconnected from channel ${connection.channel.id} on guild ${connection.channel.guild.id}`);
+            clearInterval(checkConnection);
         });
 
         connection.on('speaking', (user, speaking) => { // emitted whenever a user changes speaking state
