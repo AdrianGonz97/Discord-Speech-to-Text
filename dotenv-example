@@ -3,3 +3,4 @@ GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\application\credentials.json"
 AUDIO_LOGGING=true
 AUDIO_SAVE_PATH="C:\path\to\desired\audio\logging\directory"
 LANGUAGE_CODE="en-US"
+PROFANITY_FILTER=false
