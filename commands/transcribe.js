@@ -9,12 +9,13 @@ const speechClient = new speech.SpeechClient();
 module.exports = async function (message) {
     const client = message.client;
     const voiceChannel = message.member.voice.channel;
+    const summonerId = message.member.id;
 
     const encoding = 'LINEAR16';
     const sampleRateHertz = 48000;
     const languageCode = process.env.LANGUAGE_CODE;
     const saveFiles = (process.env.AUDIO_LOGGING == 'true');
-
+    
     if (voiceChannel) {
         let isAlreadyInChannel = false;
 
@@ -91,7 +92,7 @@ module.exports = async function (message) {
                             console.log(`[TRANSCRIPTION]: ${transcript}`);
                             message.channel.send(`**${nickname}**: ${transcript}`);
 
-                            if (transcript.toLowerCase() == "disconnect") {
+                            if (transcript.toLowerCase() == "disconnect" && user.id == summonerId) {
                                 connection.disconnect();
                             }
                 });
