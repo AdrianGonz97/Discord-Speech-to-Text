@@ -9,7 +9,9 @@ const client = new Discord.Client();
 const audioFolder = path.join(process.env.AUDIO_SAVE_PATH, 'audio_files');
 
 console.log(`[SETTINGS]: Audio Logging: ${process.env.AUDIO_LOGGING == 'true'}`);
-console.log(`[SETTINGS]: Saving Audio Files To: ${audioFolder}`);
+if (process.env.AUDIO_LOGGING == 'true') {
+  console.log(`[SETTINGS]: Saving Audio Files To: ${audioFolder}`);
+}
 console.log(`[SETTINGS]: Language Code: ${process.env.LANGUAGE_CODE}`);
 
 makeDir(audioFolder);
