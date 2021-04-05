@@ -90,6 +90,10 @@ module.exports = async function (message) {
                             console.log("[UPDATE]: Finished transcribing")
                             console.log(`[TRANSCRIPTION]: ${transcript}`);
                             message.channel.send(`**${nickname}**: ${transcript}`);
+
+                            if (transcript.toLowerCase() == "disconnect") {
+                                connection.disconnect();
+                            }
                 });
 
                 console.log(`[UPDATE]: User ${user.id} is speaking!`);
