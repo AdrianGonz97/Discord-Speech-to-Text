@@ -47,7 +47,7 @@ to dismiss it as well.
 - In your [Google Cloud Platform Dashboard](https://console.cloud.google.com/home/dashboard), create a project and an IAM role (you can set the role to "owner" for simple testing - **NOT recommended for production builds**).
 - Create a **Service Account** for your new project in the Google Cloud Dashboard by selecting **'Go to project settings'**.
 - Once created, select the **Service Account**, click on the **'Keys'** tab at the top, press **'Add Key'**, then **'Create a Key'** (JSON), and save the credentials file.
-- From the Google Platform Dashboard, go to APIs & Services > Dashboard, click **'+ ENABLE APIS AND SERVICES'**, type **'Speech-to-text'** in the search bar, and press **Enable**.
+- From the Google Platform Dashboard, go to **APIs & Services** > **Dashboard**, click **'+ ENABLE APIS AND SERVICES'**, type **'Speech-to-text'** in the search bar, and press **Enable**.
 - Copy the path location for the credentials file and paste to it's respective location in the `dotenv-example` file.
 - Rename the `dotenv-example` file to `.env` and modify file's content to your liking.
 - Create a [Discord Bot Application](https://discord.com/developers/applications), then create a bot, paste the bot's token into the `.env` file, and invite it to your server with Administrator permissions.
