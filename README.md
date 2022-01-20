@@ -1,5 +1,4 @@
 # Discord-Speech-to-Text
-## **UNDER CONSTRUCTION**
 **WARNING: NOT COMPATIBLE WITH THE BROWSER VERSION OF DISCORD!**
 ## About
 Discord-Speech-to-Text is a simple to use Discord Bot that joins a user's voice channel 
